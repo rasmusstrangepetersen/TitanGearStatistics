@@ -9,7 +9,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 tgsShowDebug = false;
 TitanGS_FirstCycle = true;
 TitanGS_TimeCounter = 0;
-TITAN_GS_UPDATE_FREQUENCE = 2;
+TITAN_GS_UPDATE_FREQUENCE = 1;
 local updateFrame = CreateFrame("frame");
 
 -- *** Tables is defined at the end of the file
@@ -164,21 +164,21 @@ function TitanPanelGS_GetColorByScore(playerLevel, averageItemLevel)
 
   tgsDebug("|c"..color.."get color from: "..averageItemLevel.." - player level: "..playerLevel, 0);
 
-  -- Classic
-  if(playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
+  -- Shadowland
+--  if(playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
     for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND) do
       if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND[index].value) then
         color = ITEM_RARITY[index].color
       end
     end
-  -- BC
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_FUTUREEXPANSION and playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
-    for index in ipairs(TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) do
-      if(averageItemLevel > TITAN_GS_MIN_LEVEL_FUTUREEXPANSION[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  end
+  -- future expansion
+--  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_FUTUREEXPANSION and playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
+--    for index in ipairs(TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) do
+--      if(averageItemLevel > TITAN_GS_MIN_LEVEL_FUTUREEXPANSION[index].value) then
+--        color = ITEM_RARITY[index].color
+--      end
+--    end
+--  end
 
   tgsDebug("|c"..color.."color found", 0);
 
