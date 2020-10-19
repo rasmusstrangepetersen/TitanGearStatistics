@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "8.2.0";
+TITAN_GS_VERSION = "9.0.1";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -165,58 +165,16 @@ function TitanPanelGS_GetColorByScore(playerLevel, averageItemLevel)
   tgsDebug("|c"..color.."get color from: "..averageItemLevel.." - player level: "..playerLevel, 0);
 
   -- Classic
-  if(playerLevel < TITAN_GS_MIN_LEVEL_BC) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_CLASSIC) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_CLASSIC[index].value) then
+  if(playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
+    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND) do
+      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND[index].value) then
         color = ITEM_RARITY[index].color
       end
     end
   -- BC
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_BC and playerLevel < TITAN_GS_MIN_LEVEL_WOTLK) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_BC) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_BC[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- WOTLK
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_WOTLK and playerLevel < TITAN_GS_MIN_LEVEL_CATA) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_WOTLK) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_WOTLK[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- CATA
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_CATA and playerLevel < TITAN_GS_MIN_LEVEL_PANDA) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_CATA) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_CATA[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- PANDA
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_PANDA and playerLevel < TITAN_GS_MIN_LEVEL_WLOD) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_PANDA) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_PANDA[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- WLOD
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_WLOD and playerLevel <TITAN_GS_MIN_LEVEL_LEGION) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_WLOD) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_WLOD[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- LEGION
-  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_LEGION and playerLevel < TITAN_GS_MIN_LEVEL_BOA) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_LEGION) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_LEGION[index].value) then
-        color = ITEM_RARITY[index].color
-      end
-    end
-  -- BOA
-  else
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_BOA) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_BOA[index].value) then
+  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_FUTUREEXPANSION and playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
+    for index in ipairs(TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) do
+      if(averageItemLevel > TITAN_GS_MIN_LEVEL_FUTUREEXPANSION[index].value) then
         color = ITEM_RARITY[index].color
       end
     end
@@ -310,84 +268,24 @@ end
 -- DESC : Tables used to decide which color the titanbar text should have
 -- **************************************************************************
 
-TITAN_GS_MIN_LEVEL_CLASSIC = 1
-TITAN_GS_MIN_LEVEL_BC = 61
-TITAN_GS_MIN_LEVEL_WOTLK = 71
-TITAN_GS_MIN_LEVEL_CATA = 81
-TITAN_GS_MIN_LEVEL_PANDA = 86
-TITAN_GS_MIN_LEVEL_WLOD = 91
-TITAN_GS_MIN_LEVEL_LEGION = 101
-TITAN_GS_MIN_LEVEL_BOA = 111
+TITAN_GS_MIN_LEVEL_SHADOWLAND = 1
+TITAN_GS_MIN_LEVEL_FUTUREEXPANSION = 61
   
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_CLASSIC = { -- level 60
+TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
   { name = GS_POOR,      value = 1 },
-  { name = GS_COMMON,    value = 10},
-  { name = GS_UNCOMMON,  value = 20},
-  { name = GS_RARE,      value = 40},
-  { name = GS_EPIC,      value = 60},
-  { name = GS_LEGENDARY, value = 80},
-  { name = GS_ARTIFACT,  value = 80},
+  { name = GS_COMMON,    value = 90},
+  { name = GS_UNCOMMON,  value = 128},
+  { name = GS_RARE,      value = 158}, -- Achievement Superior
+  { name = GS_EPIC,      value = 183},
+  { name = GS_LEGENDARY, value = 226},
+  { name = GS_ARTIFACT,  value = 226},
 }
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_BC = { -- level 70
+TITAN_GS_MIN_LEVEL_FUTUREEXPANSION = { -- level 61-?
   { name = GS_POOR,      value = 10 },
   { name = GS_COMMON,    value = 20 },
-  { name = GS_UNCOMMON,  value = 63 }, -- verified BS
-  { name = GS_RARE,      value = 72 }, -- verified BS
-  { name = GS_EPIC,      value = 80 }, -- verified BS
+  { name = GS_UNCOMMON,  value = 63 }, 
+  { name = GS_RARE,      value = 72 }, 
+  { name = GS_EPIC,      value = 80 }, 
   { name = GS_LEGENDARY, value = 100},
   { name = GS_ARTIFACT,  value = 100},
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_WOTLK = { -- level 80
-  { name = GS_POOR,      value = 65 },
-  { name = GS_COMMON,    value = 74 },
-  { name = GS_UNCOMMON,  value = 83 }, -- verified BS
-  { name = GS_RARE,      value = 92 }, -- verified BS
-  { name = GS_EPIC,      value = 100 }, -- verified, old raids
-  { name = GS_LEGENDARY, value = 120 },
-  { name = GS_ARTIFACT,  value = 120 },
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_CATA = { -- level 85
-  { name = GS_POOR,      value = 80 },
-  { name = GS_COMMON,    value = 100 },
-  { name = GS_UNCOMMON,  value = 103 }, -- verified BS
-  { name = GS_RARE,      value = 106 }, -- verified BS
-  { name = GS_EPIC,      value = 108 }, -- verified BS
-  { name = GS_LEGENDARY, value = 140 },
-  { name = GS_ARTIFACT,  value = 140 },
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_PANDA = { -- level 90
-  { name = GS_POOR,      value = 60 },
-  { name = GS_COMMON,    value = 80 },
-  { name = GS_UNCOMMON,  value = 109 }, -- verified BS
-  { name = GS_RARE,      value = 116 }, -- verified BS
-  { name = GS_EPIC,      value = 122 }, -- verified BS
-  { name = GS_LEGENDARY, value = 160 },
-  { name = GS_ARTIFACT,  value = 160 },
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_WLOD = { -- level 100
-  { name = GS_POOR,      value = 60 },
-  { name = GS_COMMON,    value = 80 },
-  { name = GS_UNCOMMON,  value = 115 },
-  { name = GS_RARE,      value = 126 }, -- verified BS
-  { name = GS_EPIC,      value = 137 }, -- verified BS
-  { name = GS_LEGENDARY, value = 180 },
-  { name = GS_ARTIFACT,  value = 180 },
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_LEGION = { -- level 110
-  { name = GS_POOR,      value = 120 },
-  { name = GS_COMMON,    value = 130 },
-  { name = GS_UNCOMMON,  value = 140 },
-  { name = GS_RARE,      value = 145 },-- verified BS
-  { name = GS_EPIC,      value = 165 },-- verified BS
-  { name = GS_LEGENDARY, value = 240 },-- verified drop
-  { name = GS_ARTIFACT,  value = 240 },
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_BOA = { -- level 120
-  { name = GS_POOR,      value = 180 },
-  { name = GS_COMMON,    value = 200 },
-  { name = GS_UNCOMMON,  value = 225 }, -- verified BS
-  { name = GS_RARE,      value = 300 }, -- verified BS
-  { name = GS_EPIC,      value = 355 }, -- verified BS
-  { name = GS_LEGENDARY, value = 400 },
-  { name = GS_ARTIFACT,  value = 400 },
 }
