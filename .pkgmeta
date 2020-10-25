@@ -1,10 +1,10 @@
-package-as: Titan Panel GearStatistics
+package-as: TitanGearStatistics
 
 ignore:
 - .DS_Store
 - .gitignore
 
 required-dependencies:
-- Titan Panel
+- Titan
 - GearStatistics
   
