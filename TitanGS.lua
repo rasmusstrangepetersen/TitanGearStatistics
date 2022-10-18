@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "9.0.1";
+TITAN_GS_VERSION = "9.2.7";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -276,7 +276,7 @@ TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
   { name = GS_COMMON,    value = 90},
   { name = GS_UNCOMMON,  value = 128},
   { name = GS_RARE,      value = 158}, -- Achievement Superior
-  { name = GS_EPIC,      value = 183},
+  { name = GS_EPIC,      value = 183}, -- Achievement Epic
   { name = GS_LEGENDARY, value = 226},
   { name = GS_ARTIFACT,  value = 226},
 }
