@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "9.2.7";
+TITAN_GS_VERSION = "10.0.0";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -165,20 +165,21 @@ function TitanPanelGS_GetColorByScore(playerLevel, averageItemLevel)
   tgsDebug("|c"..color.."get color from: "..averageItemLevel.." - player level: "..playerLevel, 0);
 
   -- Shadowland
---  if(playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
+  if(playerLevel < TITAN_GS_MIN_LEVEL_DRAGONFLIGHT) then
     for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND) do
       if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND[index].value) then
         color = ITEM_RARITY[index].color
       end
     end
-  -- future expansion
---  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_FUTUREEXPANSION and playerLevel < TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) then
---    for index in ipairs(TITAN_GS_MIN_LEVEL_FUTUREEXPANSION) do
---      if(averageItemLevel > TITAN_GS_MIN_LEVEL_FUTUREEXPANSION[index].value) then
---        color = ITEM_RARITY[index].color
---      end
---    end
---  end
+  -- Dragonflight
+--  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_DRAGONFLIGHT and playerLevel < TITAN_GS_MIN_LEVEL_FUTURE) then
+ else
+    for index in ipairs(TITAN_GS_MIN_LEVEL_DRAGONFLIGHT) do
+      if(averageItemLevel > TITAN_GS_MIN_LEVEL_DRAGONFLIGHT[index].value) then
+        color = ITEM_RARITY[index].color
+      end
+    end
+  end
 
   tgsDebug("|c"..color.."color found", 0);
 
@@ -269,7 +270,7 @@ end
 -- **************************************************************************
 
 TITAN_GS_MIN_LEVEL_SHADOWLAND = 1
-TITAN_GS_MIN_LEVEL_FUTUREEXPANSION = 61
+TITAN_GS_MIN_LEVEL_DRAGONFLIGHT = 61
   
 TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
   { name = GS_POOR,      value = 1 },
@@ -280,12 +281,12 @@ TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
   { name = GS_LEGENDARY, value = 226},
   { name = GS_ARTIFACT,  value = 226},
 }
-TITAN_GS_MIN_LEVEL_FUTUREEXPANSION = { -- level 61-?
-  { name = GS_POOR,      value = 10 },
-  { name = GS_COMMON,    value = 20 },
-  { name = GS_UNCOMMON,  value = 63 }, 
-  { name = GS_RARE,      value = 72 }, 
-  { name = GS_EPIC,      value = 80 }, 
-  { name = GS_LEGENDARY, value = 100},
-  { name = GS_ARTIFACT,  value = 100},
+TITAN_GS_MIN_LEVEL_DRAGONFLIGHT = { -- level 61-70
+  { name = GS_POOR,      value = 158 },
+  { name = GS_COMMON,    value = 183 },
+  { name = GS_UNCOMMON,  value = 226 }, 
+  { name = GS_RARE,      value = 346 }, -- guess on superior achievement
+  { name = GS_EPIC,      value = 359 }, -- guess on epic achievement
+  { name = GS_LEGENDARY, value = 372 },
+  { name = GS_ARTIFACT,  value = 372 },
 }
