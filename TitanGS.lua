@@ -174,8 +174,8 @@ function TitanPanelGS_GetColorByScore(playerLevel, averageItemLevel)
   -- Dragonflight
 --  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_DRAGONFLIGHT and playerLevel < TITAN_GS_MIN_LEVEL_FUTURE) then
  else
-    for index in ipairs(TITAN_GS_MIN_LEVEL_DRAGONFLIGHT) do
-      if(averageItemLevel > TITAN_GS_MIN_LEVEL_DRAGONFLIGHT[index].value) then
+    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT) do
+      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT[index].value) then
         color = ITEM_RARITY[index].color
       end
     end
@@ -281,7 +281,7 @@ TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
   { name = GS_LEGENDARY, value = 226},
   { name = GS_ARTIFACT,  value = 226},
 }
-TITAN_GS_MIN_LEVEL_DRAGONFLIGHT = { -- level 61-70
+TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT = { -- level 61-70
   { name = GS_POOR,      value = 158 },
   { name = GS_COMMON,    value = 183 },
   { name = GS_UNCOMMON,  value = 226 }, 
