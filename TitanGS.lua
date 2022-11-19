@@ -9,7 +9,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 tgsShowDebug = false;
 TitanGS_FirstCycle = true;
 TitanGS_TimeCounter = 0;
-TITAN_GS_UPDATE_FREQUENCE = 1.2;
+TITAN_GS_UPDATE_FREQUENCE = 1.5;
 local updateFrame = CreateFrame("frame");
 
 -- *** Tables is defined at the end of the file
