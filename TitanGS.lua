@@ -285,8 +285,8 @@ TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT = { -- level 61-70
   { name = GS_POOR,      value = 158 },
   { name = GS_COMMON,    value = 183 },
   { name = GS_UNCOMMON,  value = 226 }, 
-  { name = GS_RARE,      value = 346 }, -- guess on superior achievement
-  { name = GS_EPIC,      value = 359 }, -- guess on epic achievement
-  { name = GS_LEGENDARY, value = 372 },
-  { name = GS_ARTIFACT,  value = 372 },
+  { name = GS_RARE,      value = 346 }, -- superior achievement
+  { name = GS_EPIC,      value = 372 }, -- epic achievement
+  { name = GS_LEGENDARY, value = 400 },
+  { name = GS_ARTIFACT,  value = 400 },
 }
