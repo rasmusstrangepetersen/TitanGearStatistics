@@ -1,19 +1,15 @@
 -- *** Version information
-TITAN_GS_VERSION = "10.0.2";
+TITAN_GS_VERSION = "11.0.0";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
-local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 
--- *** Variables 
-tgsShowDebug = false;
-TitanGS_FirstCycle = true;
-TitanGS_TimeCounter = 0;
+-- *** Variables
+showDebug = false;
+firstCycle = true;
+timeCounter = 0;
 TITAN_GS_UPDATE_FREQUENCE = 1.5;
 local updateFrame = CreateFrame("frame");
-
--- *** Tables is defined at the end of the file
-
 
 -- **************************************************************************
 -- DESC : Registers the plugin upon it loading
@@ -49,16 +45,16 @@ function TitanPanelGearStatButton_OnLoad(self)
 
   updateFrame:SetScript("OnUpdate", TitanPanelGearStatButton_OnUpdate)
         
-  tgsDebug("TitanPanelGearStat loaded", 0);
+  debugMessage("TitanPanelGearStat loaded", 0);
 end
 
 -- **************************************************************************
 -- DESC : Debug function to print message to chat frame
 -- VARS : Message = message to print to chat frame
 -- **************************************************************************
-function tgsDebug(Message, override)
-   if (tgsShowDebug or override ==1) then
-      DEFAULT_CHAT_FRAME:AddMessage("|c"..GS_colorRed.."Titan GS: " .. Message);
+function debugMessage(Message, override)
+   if (showDebug or override ==1) then
+      DEFAULT_CHAT_FRAME:AddMessage("|c"..colorRed.."Titan GS: " .. Message);
    end
 end
 
@@ -66,7 +62,7 @@ end
 -- DESC : This section will grab the events registered to the add on and act on them
 -- **************************************************************************
 function TitanPanelGearStatButton_OnEvent(self, event, a1, ...)
-  tgsDebug("Received event: "..event, 0);
+  debugMessage("Received event: "..event, 0);
 
   if (event == "PLAYER_EQUIPMENT_CHANGED" or event == "PLAYER_LEVEL_UP") then
     TitanPanelButton_UpdateButton(TITAN_GS_ID);
@@ -92,20 +88,20 @@ end
 -- VARS : elapsed = how often do we update the button (events should be enough)
 -- **************************************************************************
 function TitanPanelGearStatButton_OnUpdate(self, elapsed)
-  tgsDebug("Trying to update button, elapsed: "..TitanGS_TimeCounter, 0);
+  debugMessage("Trying to update button, elapsed: ".. timeCounter, 0);
   
-  TitanGS_TimeCounter = TitanGS_TimeCounter + 0.01
+  timeCounter = timeCounter + 0.01
 
-  if (TitanGS_TimeCounter >= TITAN_GS_UPDATE_FREQUENCE and TitanGS_FirstCycle == false) then
-    tgsDebug("Trying to update button - second cycle - stop here, titanGearStat_TimeCounter: "..TitanGS_TimeCounter, 0);
+  if (timeCounter >= TITAN_GS_UPDATE_FREQUENCE and firstCycle == false) then
+    debugMessage("Trying to update button - second cycle - stop here, titanGearStat_TimeCounter: ".. timeCounter, 0);
     TitanPanelButton_UpdateButton(TITAN_GS_ID);
     TitanPanelButton_UpdateTooltip(self);
-    TitanGS_TimeCounter = 0
+    timeCounter = 0
     updateFrame:SetScript("OnUpdate", nil)
   end
-  if ( TitanGS_TimeCounter >= TITAN_GS_UPDATE_FREQUENCE and TitanGS_FirstCycle == true) then
-    TitanGS_FirstCycle = false
-    tgsDebug("Trying to update button - first cycle, titanGearStat_TimeCounter: "..TitanGS_TimeCounter, 0);
+  if ( timeCounter >= TITAN_GS_UPDATE_FREQUENCE and firstCycle == true) then
+    firstCycle = false
+    debugMessage("Trying to update button - first cycle, titanGearStat_TimeCounter: ".. timeCounter, 0);
   end
 end
 
@@ -113,7 +109,7 @@ end
 -- DESC : Open main UI on left click
 -- **************************************************************************
 function TitanPanelGearStatButton_OnClick(self, button)
-  tgsDebug("Entering TitanPanelGearStatButton_OnClick, button: "..button, 0);
+  debugMessage("Entering TitanPanelGearStatButton_OnClick, button: "..button, 0);
 
   if (button == "LeftButton") then
     GS_CharFrame_Toggle();
@@ -125,7 +121,7 @@ end
 -- VARS : id = plugin id
 -- **************************************************************************
 function TitanPanelGearStatButton_GetButtonText(id)
-  tgsDebug("Entering TitanPanelGSButton_GetButtonText, ShowRegularText", 0);
+  debugMessage("Entering TitanPanelGSButton_GetButtonText, ShowRegularText", 0);
   
   out = ""
 
@@ -142,14 +138,13 @@ end
 -- **************************************************************************
 function TitanPanelGS_GetScore(inColor)
   if(GS.currentPlayer.averageItemLevel == 0) then
-    GS_UpdatePlayer("player", 1);
+    updateGearScore("player", 1);
   end
   
---  local averageItemScore = "i"..format("%.0f", GS.currentPlayer.averageItemLevel).." ("..format("%.0f", GS.currentPlayer.averageItemScore)..")"
   local averageItemScore = "i"..format("%.0f", GS.currentPlayer.averageItemLevel)
 
   if(inColor) then
-    local color = TitanPanelGS_GetColorByScore(GS.currentPlayer.playerLevel, GS.currentPlayer.averageItemLevel);
+    local color = TitanPanelGS_GetColorByScore(GS.currentPlayer);
     averageItemScore = "|c"..color..averageItemScore
   end
   
@@ -157,40 +152,75 @@ function TitanPanelGS_GetScore(inColor)
 end
 
 -- **************************************************************************
--- DESC : Returns the colour that matches the averageItemLevel for the players own level
+-- DESC : Returns the color that matches the averageIlvl vs. min and max ilvl on equipped gear
 -- **************************************************************************
-function TitanPanelGS_GetColorByScore(playerLevel, averageItemLevel) 
-  local color = GS_colorBlue; -- Unknown, light blue
+function TitanPanelGS_GetColorByScore(playerRecord) 
+  local color = colorBlue; -- Unknown, light blue
+  local ilvlMin = 0
+  local ilvlMax = 0
+  local item
 
-  tgsDebug("|c"..color.."get color from: "..averageItemLevel.." - player level: "..playerLevel, 0);
-
-  -- Shadowland
-  if(playerLevel < TITAN_GS_MIN_LEVEL_DRAGONFLIGHT) then
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND[index].value) then
-        color = ITEM_RARITY[index].color
+  for index in ipairs(GEARLIST) do
+    item = playerRecord.itemList[GEARLIST[index].name]
+    if (item.itemName ~= TEXT_NO_ITEM_EQUIPPED and (item.itemType == GEARTYPE_ARMOR or item.itemType == GEARTYPE_WEAPON)) then
+      -- fix for itemlevels with '+', eg. 385+
+      string.gsub(item.itemLevel, "+", "")
+      local iLvl = tonumber(item.itemLevel)
+      -- update itemMinLevel
+      if (iLvl < ilvlMin and ilvlMin > 0) then
+        ilvlMin = iLvl
       end
-    end
-  -- Dragonflight
---  elseif(playerLevel >= TITAN_GS_MIN_LEVEL_DRAGONFLIGHT and playerLevel < TITAN_GS_MIN_LEVEL_FUTURE) then
- else
-    for index in ipairs(TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT) do
-      if(averageItemLevel > TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT[index].value) then
-        color = ITEM_RARITY[index].color
+      -- update itemMaxlevel
+      if (iLvl > ilvlMax) then
+        ilvlMax = iLvl
       end
     end
   end
-
-  tgsDebug("|c"..color.."color found", 0);
+  
+  color = calculateColor(ilvlMin, ilvlMax)
+  debugMessage("|c"..color.."color found", 0);
 
   return color;
-end 
+end
+
+-- **************************************************************************
+-- DESC : Get color for tooltip, based on the difference in ilvl for the players equipped gear
+-- Grey:   + 20 iLevels
+-- White: 11-20 iLevels
+-- Green:  5-10 iLevels
+-- Blue:    1-5 iLevels
+-- Purple:    0 iLevels
+-- **************************************************************************
+function calculateColor(minItemLevel, maxItemLevel)
+  local color = colorBlue;
+
+  if (minItemLevel == nil or maxItemLevel == nil) then
+    return colorBlue;
+  end
+
+  local iLevelDiff = (maxItemLevel-minItemLevel);
+  debugMessage("iLevelDiff: "..iLevelDiff, 0)
+
+  if (iLevelDiff >= 20) then
+    color = colorGrey;
+  elseif (iLevelDiff < 20 and iLevelDiff > 10) then
+    color = colorWhite;
+  elseif (iLevelDiff <= 10 and iLevelDiff > 5) then
+    color = colorGreen;
+  elseif (iLevelDiff <= 5 and iLevelDiff >0) then
+    color = colorDarkBlue;
+  else
+    color = colorPurple;
+  end
+
+  return color;
+end
 
 -- **************************************************************************
 -- DESC : Update tooltip text
 -- **************************************************************************
 function TitanPanelGearStatButton_GetTooltipText()
-  tgsDebug("Entering: TitanPanelGearStatButton_GetTooltipText", 0);
+  debugMessage("Entering: TitanPanelGearStatButton_GetTooltipText", 0);
 
   TitanPanelButton_UpdateButton(TITAN_GS_ID);
   TitanPanelButton_UpdateTooltip(self);
@@ -205,25 +235,25 @@ end
 -- DESC : Return the players current gear with itemLevel and score as formatted text
 -- **************************************************************************
 function TitanPanelGS_GetPlayerGear()
-  tgsDebug("Returning player gear", 0);
+  debugMessage("Returning player gear", 0);
 
   text = ""
   local iName = ""
   
-  for index in ipairs(GS_GEARLIST) do 
-    GS_GEARLIST[index].id = GetInventorySlotInfo(GS_GEARLIST[index].name);
-    local slotLink = GetInventoryItemLink(UnitName("player"), GS_GEARLIST[index].id);
+  for index in ipairs(GEARLIST) do
+    GEARLIST[index].id = GetInventorySlotInfo(GEARLIST[index].name);
+    local slotLink = GetInventoryItemLink(UnitName("player"), GEARLIST[index].id);
     if (slotLink ~= nil) then
       local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType = GetItemInfo(slotLink);
       local itemScore = 0;
       iName = itemName;
-      if(GS_GEARLIST[index].minLevel > 0 and itemLink) then
-        if (GS_isLegionArtifactWeapon(GS_GEARLIST[index].desc, iName)==0) then
-          text = text..GS_GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GS_GEARLIST[index].name].itemLink
-          local missingEnchantsAndGems = GS.currentPlayer.itemList[GS_GEARLIST[index].name].itemMissingText;
-          itemLevel = GS.currentPlayer.itemList[GS_GEARLIST[index].name].itemLevel
-          local itemScore = GS.currentPlayer.itemList[GS_GEARLIST[index].name].itemScore
-          local levelColor = GS.currentPlayer.itemList[GS_GEARLIST[index].name].levelColor
+      if(GEARLIST[index].minLevel > 0 and itemLink) then
+        if (GS_isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0) then
+          text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
+          local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
+          itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
+          local itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
+          local levelColor = GS.currentPlayer.itemList[GEARLIST[index].name].levelColor
     
           text = text.."\t".."|c"..levelColor..missingEnchantsAndGems;
           text = text.." i"..itemLevel.." ("..format("%.0f", itemScore)..")"
@@ -232,17 +262,15 @@ function TitanPanelGS_GetPlayerGear()
       end
     else
       -- Don't write "empty offhand slot", if two hand weapon is equipped and don't write empty tabard and shirt
-      if((not (GS_GEARLIST[index].desc == GS_OFFHAND and GS.currentPlayer.twoHandWeapon == true)) and GS_GEARLIST[index].minLevel <= GS.currentPlayer.playerLevel) then
-        if (GS_isLegionArtifactWeapon(GS_GEARLIST[index].desc, iName)==0 and GS_GEARLIST[index].minLevel > 0) then
-          text = text..GS_GEARLIST[index].desc..": ".."|c"..GS_colorGrey..TITAN_GS_NO.." "..GS_GEARLIST[index].desc.." "..TITAN_GS_EQUIPPED
+      if((not (GEARLIST[index].desc == GS_OFFHAND and GS.currentPlayer.twoHandWeapon == true)) and GEARLIST[index].minLevel <= GS.currentPlayer.playerLevel) then
+        if (GS_isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0 and GEARLIST[index].minLevel > 0) then
+          text = text..GEARLIST[index].desc..": ".."|c"..GS_colorGrey..TITAN_GS_NO.." "..GEARLIST[index].desc.." "..TITAN_GS_EQUIPPED
           text = text.."\n"
         end
       end
     end
   end
---  text = text.." ".."\t"..TITAN_GS_AVERAGE..": i"..format("%.0f", GS.currentPlayer.averageItemLevel);
   text = text.." ".."\t"..TITAN_GS_AVERAGE..": i"..format("%.0f", GS.currentPlayer.averageItemLevel).." ("..format("%.0f", GS.currentPlayer.averageItemScore)..")";
---  text = text.."\n ".."\t"..TITAN_GS_TOTAL..": i"..format("%.0f", GS.currentPlayer.totalItemLevel).." ("..format("%.0f", GS.currentPlayer.totalItemScore)..")";
 
   return text
 end
@@ -251,9 +279,8 @@ end
 -- DESC : Right click menu in titanbar
 -- **************************************************************************
 function TitanPanelRightClickMenu_PrepareGearStatMenu()
-  tgsDebug("Preparing rightclick menu", 0);
-  
-  
+  debugMessage("Preparing rightclick menu", 0);
+
   -- level 1
   TitanPanelRightClickMenu_AddTitle(TitanPlugins[TITAN_GS_ID].menuText);
 
@@ -264,29 +291,3 @@ function TitanPanelRightClickMenu_PrepareGearStatMenu()
   TitanPanelRightClickMenu_AddSpacer();
   TitanPanelRightClickMenu_AddCommand(L["TITAN_PANEL_MENU_HIDE"], TITAN_GS_ID, TITAN_PANEL_MENU_FUNC_HIDE);
 end
-
--- **************************************************************************
--- DESC : Tables used to decide which color the titanbar text should have
--- **************************************************************************
-
-TITAN_GS_MIN_LEVEL_SHADOWLAND = 1
-TITAN_GS_MIN_LEVEL_DRAGONFLIGHT = 61
-  
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_SHADOWLAND = { -- Levels reset 1-60
-  { name = GS_POOR,      value = 1 },
-  { name = GS_COMMON,    value = 90},
-  { name = GS_UNCOMMON,  value = 128},
-  { name = GS_RARE,      value = 158}, -- Achievement Superior
-  { name = GS_EPIC,      value = 183}, -- Achievement Epic
-  { name = GS_LEGENDARY, value = 226},
-  { name = GS_ARTIFACT,  value = 226},
-}
-TITAN_GS_ITEM_ILVL_LOW_LIMITS_DRAGONFLIGHT = { -- level 61-70
-  { name = GS_POOR,      value = 158 },
-  { name = GS_COMMON,    value = 183 },
-  { name = GS_UNCOMMON,  value = 226 }, 
-  { name = GS_RARE,      value = 346 }, -- superior achievement
-  { name = GS_EPIC,      value = 372 }, -- epic achievement
-  { name = GS_LEGENDARY, value = 400 },
-  { name = GS_ARTIFACT,  value = 400 },
-}
