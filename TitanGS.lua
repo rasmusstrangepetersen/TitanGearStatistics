@@ -252,7 +252,7 @@ function TitanPanelGS_GetPlayerGear()
           text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
           local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
           itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
-          local itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
+          itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
           local levelColor = GS.currentPlayer.itemList[GEARLIST[index].name].levelColor
     
           text = text.."\t".."|c"..levelColor..missingEnchantsAndGems;
