@@ -155,75 +155,23 @@ function TitanPanelGS_GetScore(inColor)
 end
 
 -- **************************************************************************
--- DESC : Returns the color that matches the averageIlvl vs. min and max ilvl on equipped gear
--- **************************************************************************
-function TitanPanelGS_GetColorByScore(playerRecord) 
-  local color = colorBlue; -- Unknown, light blue
-  local ilvlMin = 0
-  local ilvlMax = 0
-  local item
-
-  for index in ipairs(GEARLIST) do
-    item = playerRecord.itemList[GEARLIST[index].name]
-    if (item.itemName ~= TEXT_NO_ITEM_EQUIPPED and (item.itemType == GEARTYPE_ARMOR or item.itemType == GEARTYPE_WEAPON)) then
-      -- fix for itemlevels with '+', eg. 385+
-      string.gsub(item.itemLevel, "+", "")
-      local iLvl = tonumber(item.itemLevel)
-      -- update itemMinLevel
-      if (iLvl < ilvlMin and ilvlMin > 0) then
-        ilvlMin = iLvl
-      end
-      -- update itemMaxlevel
-      if (iLvl > ilvlMax) then
-        ilvlMax = iLvl
-      end
-    end
-  end
-
-  color = calculateColor(iLevelMin, playerRecord.averageItemLevel, iLevelMax)
-  debugMessage("|c"..color.."color found", 0);
-
-  return color;
-end
-
--- **************************************************************************
 -- DESC : Get color for tooltip, based on the difference in ilvl for the players equipped gear
--- Grey:   + 20% iLevels between min->avg or avg->max
--- White: 11-20% iLevels between min->avg or avg->max
--- Green:  5-10% iLevels between min->avg or avg->max
--- Blue:    1-5% iLevels between min->avg or avg->max
--- Purple:    0% iLevels  between min->avg or avg->max
+-- colors and limits for colors defined in variables.lua AVG_GEAR_ILVL_COLOR_LIMIT in GearStatistics
 -- **************************************************************************
-function calculateColor(minItemLevel, avgItemLevel, maxItemLevel)
+function TitanPanelGS_GetColorByScore(playerRecord)
   local color = colorBlue;
 
-  if (minItemLevel == nil or avgItemLevel == nil or maxItemLevel == nil) then
+  if (playerRecord == nil) then
     return colorBlue;
   end
 
-  local iLevelDiffMin = ((avgItemLevel-minItemLevel)/avgItemLevel)*100;
-  local iLevelDiffMax = ((maxItemLevel-avgItemLevel)/avgItemLevel)*100;
-  local iLevelDiff;
+  local iLevelDiffMin = ((playerRecord.averageItemLevel-playerRecord.minItemLevel)/playerRecord.averageItemLevel)*100;
+  local iLevelDiffMax = ((playerRecord.maxItemLevel-playerRecord.averageItemLevel)/playerRecord.averageItemLevel)*100;
+
   if (iLevelDiffMin>iLevelDiffMax) then
-    iLevelDiff = iLevelDiffMin
+    return calculateColorTitan(iLevelDiffMin)
   else
-    iLevelDiff = iLevelDiffMax
-  end
-
-  debugMessage("iLevelDiffMin: "..iLevelDiffMin, 0)
-  debugMessage("iLevelDiffMax: "..iLevelDiffMax, 0)
-  debugMessage("iLevelDiff: "..iLevelDiff, 0)
-
-  if (iLevelDiff >= 20) then
-    color = colorGrey;
-  elseif (iLevelDiff < 20 and iLevelDiff > 10) then
-    color = colorWhite;
-  elseif (iLevelDiff <= 10 and iLevelDiff > 5) then
-    color = colorGreen;
-  elseif (iLevelDiff <= 5 and iLevelDiff >0) then
-    color = colorDarkBlue;
-  else
-    color = colorPurple;
+    return calculateColorTitan(iLevelDiffMax)
   end
 
   return color;
