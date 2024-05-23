@@ -11,7 +11,6 @@
 ## X-CompatibleLocales: enUS
 ## X-Category: Tooltip
 
-Locales\localizationEn.lua
+locales\localizationEn.lua
 
 TitanGS.xml
-

@@ -179,8 +179,8 @@ function TitanPanelGS_GetColorByScore(playerRecord)
       end
     end
   end
-  
-  color = calculateColor(ilvlMin, ilvlMax)
+
+  color = calculateColor(iLevelMin, playerRecord.averageItemLevel, iLevelMax)
   debugMessage("|c"..color.."color found", 0);
 
   return color;
@@ -188,20 +188,30 @@ end
 
 -- **************************************************************************
 -- DESC : Get color for tooltip, based on the difference in ilvl for the players equipped gear
--- Grey:   + 20 iLevels
--- White: 11-20 iLevels
--- Green:  5-10 iLevels
--- Blue:    1-5 iLevels
--- Purple:    0 iLevels
+-- Grey:   + 20% iLevels between min->avg or avg->max
+-- White: 11-20% iLevels between min->avg or avg->max
+-- Green:  5-10% iLevels between min->avg or avg->max
+-- Blue:    1-5% iLevels between min->avg or avg->max
+-- Purple:    0% iLevels  between min->avg or avg->max
 -- **************************************************************************
-function calculateColor(minItemLevel, maxItemLevel)
+function calculateColor(minItemLevel, avgItemLevel, maxItemLevel)
   local color = colorBlue;
 
-  if (minItemLevel == nil or maxItemLevel == nil) then
+  if (minItemLevel == nil or avgItemLevel == nil or maxItemLevel == nil) then
     return colorBlue;
   end
 
-  local iLevelDiff = (maxItemLevel-minItemLevel);
+  local iLevelDiffMin = ((avgItemLevel-minItemLevel)/avgItemLevel)*100;
+  local iLevelDiffMax = ((maxItemLevel-avgItemLevel)/avgItemLevel)*100;
+  local iLevelDiff;
+  if (iLevelDiffMin>iLevelDiffMax) then
+    iLevelDiff = iLevelDiffMin
+  else
+    iLevelDiff = iLevelDiffMax
+  end
+
+  debugMessage("iLevelDiffMin: "..iLevelDiffMin, 0)
+  debugMessage("iLevelDiffMax: "..iLevelDiffMax, 0)
   debugMessage("iLevelDiff: "..iLevelDiff, 0)
 
   if (iLevelDiff >= 20) then
