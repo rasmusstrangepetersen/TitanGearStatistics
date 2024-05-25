@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.0.0";
+TITAN_GS_VERSION = "11.0.2";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -8,7 +8,7 @@ TITAN_GS_ID = "GearStat";
 showDebug = false;
 firstCycle = true;
 timeCounter = 0;
-TITAN_GS_UPDATE_FREQUENCE = 1.5;
+TITAN_GS_UPDATE_FREQUENCY = 1.5;
 local updateFrame = CreateFrame("frame");
 
 -- **************************************************************************
@@ -92,14 +92,14 @@ function TitanPanelGearStatButton_OnUpdate(self, elapsed)
   
   timeCounter = timeCounter + 0.01
 
-  if (timeCounter >= TITAN_GS_UPDATE_FREQUENCE and firstCycle == false) then
+  if (timeCounter >= TITAN_GS_UPDATE_FREQUENCY and firstCycle == false) then
     debugMessage("Trying to update button - second cycle - stop here, titanGearStat_TimeCounter: ".. timeCounter, 0);
     TitanPanelButton_UpdateButton(TITAN_GS_ID);
     TitanPanelButton_UpdateTooltip(self);
     timeCounter = 0
     updateFrame:SetScript("OnUpdate", nil)
   end
-  if ( timeCounter >= TITAN_GS_UPDATE_FREQUENCE and firstCycle == true) then
+  if ( timeCounter >= TITAN_GS_UPDATE_FREQUENCY and firstCycle == true) then
     firstCycle = false
     debugMessage("Trying to update button - first cycle, titanGearStat_TimeCounter: ".. timeCounter, 0);
   end
@@ -159,22 +159,15 @@ end
 -- colors and limits for colors defined in variables.lua AVG_GEAR_ILVL_COLOR_LIMIT in GearStatistics
 -- **************************************************************************
 function TitanPanelGS_GetColorByScore(playerRecord)
-  local color = colorBlue;
 
   if (playerRecord == nil) then
     return colorBlue;
   end
 
-  local iLevelDiffMin = ((playerRecord.averageItemLevel-playerRecord.minItemLevel)/playerRecord.averageItemLevel)*100;
+  local iLevelDiffMin = ((playerRecord.minItemLevel-playerRecord.averageItemLevel)/playerRecord.averageItemLevel)*100;
   local iLevelDiffMax = ((playerRecord.maxItemLevel-playerRecord.averageItemLevel)/playerRecord.averageItemLevel)*100;
 
-  if (iLevelDiffMin>iLevelDiffMax) then
-    return calculateColorTitan(iLevelDiffMin)
-  else
-    return calculateColorTitan(iLevelDiffMax)
-  end
-
-  return color;
+  return calculateColor(iLevelDiffMin+iLevelDiffMax)
 end
 
 -- **************************************************************************
@@ -223,11 +216,13 @@ function TitanPanelGS_GetPlayerGear()
       end
     else
       -- Don't write "empty offhand slot", if two hand weapon is equipped and don't write empty tabard and shirt
-      if((not (GEARLIST[index].desc == GS_OFFHAND and GS.currentPlayer.twoHandWeapon == true)) and GEARLIST[index].minLevel <= GS.currentPlayer.playerLevel) then
-        if (isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0 and GEARLIST[index].minLevel > 0) then
-          text = text..GEARLIST[index].desc..": ".."|c"..colorGrey..TITAN_GS_NO.." "..GEARLIST[index].desc.." "..TITAN_GS_EQUIPPED
-          text = text.."\n"
-        end
+     -- (not (GEARLIST[index].desc == GS_OFFHAND and GS.currentPlayer.twoHandWeapon == true)) and
+      if(GEARLIST[index].minLevel <= GS.currentPlayer.playerLevel
+              and isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0
+              and GEARLIST[index].minLevel > 0
+              and (not(GEARLIST[index].desc == GEAR_OFFHAND and GS.currentPlayer.twoHandWeapon == true))) then
+            text = text..GEARLIST[index].desc..": ".."|c"..colorGrey..TITAN_GS_NO.." "..GEARLIST[index].desc.." "..TITAN_GS_EQUIPPED
+            text = text.."\n"
       end
     end
   end
@@ -240,7 +235,7 @@ end
 -- DESC : Right click menu in titanbar
 -- **************************************************************************
 function TitanPanelRightClickMenu_PrepareGearStatMenu()
-  debugMessage("Preparing rightclick menu", 0);
+  debugMessage("Preparing right-click menu", 0);
 
   -- level 1
   TitanPanelRightClickMenu_AddTitle(TitanPlugins[TITAN_GS_ID].menuText);
