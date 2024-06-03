@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.0.2";
+TITAN_GS_VERSION = "11.0.3";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -199,10 +199,11 @@ function TitanPanelGS_GetPlayerGear()
     local slotLink = GetInventoryItemLink(UnitName("player"), GEARLIST[index].id);
     if (slotLink ~= nil) then
       local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType = GetItemInfo(slotLink);
+      local effectiveILvl, isPreview, baseILvl = GetDetailedItemLevelInfo(slotLink)
+      itemLevel = effectiveILvl
       local itemScore = 0;
       iName = itemName;
       if(GEARLIST[index].minLevel > 0 and itemLink) then
-        if (isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0) then
           text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
           local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
           itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
@@ -212,13 +213,12 @@ function TitanPanelGS_GetPlayerGear()
           text = text.."\t".."|c"..levelColor..missingEnchantsAndGems;
           text = text.." i"..itemLevel.." ("..format("%.0f", itemScore)..")"
           text = text.."\n";
-        end
       end
     else
       -- Don't write "empty offhand slot", if two hand weapon is equipped and don't write empty tabard and shirt
      -- (not (GEARLIST[index].desc == GS_OFFHAND and GS.currentPlayer.twoHandWeapon == true)) and
       if(GEARLIST[index].minLevel <= GS.currentPlayer.playerLevel
-              and isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0
+      --        and isLegionArtifactWeapon(GEARLIST[index].desc, iName)==0
               and GEARLIST[index].minLevel > 0
               and (not(GEARLIST[index].desc == GEAR_OFFHAND and GS.currentPlayer.twoHandWeapon == true))) then
             text = text..GEARLIST[index].desc..": ".."|c"..colorGrey..TITAN_GS_NO.." "..GEARLIST[index].desc.." "..TITAN_GS_EQUIPPED
