@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.1.1";
+TITAN_GS_VERSION = "11.1.2";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -207,8 +207,9 @@ function TitanPanelGS_GetPlayerGear()
         text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
         local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
         itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
-        if(GS.currentPlayer.itemList[GEARLIST[index].name].itemScore ~= nil) then
-          itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
+        itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
+        if(itemScore == nil) then
+          itemScore = 0;
         end
         local levelColor = GS.currentPlayer.itemList[GEARLIST[index].name].levelColor
     
