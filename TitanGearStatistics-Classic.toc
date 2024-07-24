@@ -1,4 +1,4 @@
-## Interface: 11502
+## Interface: 11503
 ## Title: Titan Panel [|cffeda55fGearStatistics|r] |cff00aa0011.0.2|r
 ## Notes: Provides a Titan Panel menu button for GearStatistics, showing the players equipped gear with average iLvl and gearscore.
 ## Author: Dornonville
@@ -6,7 +6,7 @@
 ## SavedVariables: 
 ## OptionalDeps: 
 ## Dependencies: TitanClassic, GearStatistics
-## Version: 11.0.2
+## Version: 11.1.0
 
 ## X-CompatibleLocales: enUS
 ## X-Category: Tooltip

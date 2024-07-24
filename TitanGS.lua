@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.0.3";
+TITAN_GS_VERSION = "11.1.0";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -143,7 +143,8 @@ function TitanPanelGS_GetScore(inColor)
   
   local averageItemScore = 0;
   if (GS.currentPlayer.averageItemLevel > 0) then
-    averageItemScore = "i"..format("%.0f", GS.currentPlayer.averageItemLevel)
+    --averageItemScore = "i"..format("%.0f", GS.currentPlayer.averageItemLevel)
+    averageItemScore = "i"..tostring(GS.currentPlayer.averageItemLevel)
   end
 
   if(inColor) then
