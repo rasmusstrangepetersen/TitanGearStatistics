@@ -6,7 +6,7 @@
 ## SavedVariables: 
 ## OptionalDeps: 
 ## Dependencies: TitanClassic, GearStatistics
-## Version: 11.1.0
+## Version: 11.1.1
 
 ## X-CompatibleLocales: enUS
 ## X-Category: Tooltip

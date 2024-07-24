@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.1.0";
+TITAN_GS_VERSION = "11.1.1";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -143,8 +143,7 @@ function TitanPanelGS_GetScore(inColor)
   
   local averageItemScore = 0;
   if (GS.currentPlayer.averageItemLevel > 0) then
-    --averageItemScore = "i"..format("%.0f", GS.currentPlayer.averageItemLevel)
-    averageItemScore = "i"..tostring(GS.currentPlayer.averageItemLevel)
+    averageItemScore = "i"..format("%.0f", tonumber(GS.currentPlayer.averageItemLevel))
   end
 
   if(inColor) then
@@ -205,15 +204,17 @@ function TitanPanelGS_GetPlayerGear()
       local itemScore = 0;
       iName = itemName;
       if(GEARLIST[index].minLevel > 0 and itemLink) then
-          text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
-          local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
-          itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
+        text = text..GEARLIST[index].desc..": "..GS.currentPlayer.itemList[GEARLIST[index].name].itemLink
+        local missingEnchantsAndGems = GS.currentPlayer.itemList[GEARLIST[index].name].itemMissingText;
+        itemLevel = GS.currentPlayer.itemList[GEARLIST[index].name].itemLevel
+        if(GS.currentPlayer.itemList[GEARLIST[index].name].itemScore ~= nil) then
           itemScore = GS.currentPlayer.itemList[GEARLIST[index].name].itemScore
-          local levelColor = GS.currentPlayer.itemList[GEARLIST[index].name].levelColor
+        end
+        local levelColor = GS.currentPlayer.itemList[GEARLIST[index].name].levelColor
     
-          text = text.."\t".."|c"..levelColor..missingEnchantsAndGems;
-          text = text.." i"..itemLevel.." ("..format("%.0f", itemScore)..")"
-          text = text.."\n";
+        text = text.."\t".."|c"..levelColor..missingEnchantsAndGems;
+        text = text.." i"..itemLevel.." ("..format("%.0f", tonumber(itemScore))..")"
+        text = text.."\n";
       end
     else
       -- Don't write "empty offhand slot", if two hand weapon is equipped and don't write empty tabard and shirt
