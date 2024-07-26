@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.1.2";
+TITAN_GS_VERSION = "11.1.3";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -61,7 +61,7 @@ end
 -- **************************************************************************
 -- DESC : This section will grab the events registered to the add on and act on them
 -- **************************************************************************
-function TitanPanelGearStatButton_OnEvent(self, event, a1, ...)
+function TitanPanelGearStatButton_OnEvent(self, event, _, ...)
   debugMessage("Received event: "..event, 0);
 
   if (event == "PLAYER_EQUIPMENT_CHANGED" or event == "PLAYER_LEVEL_UP") then
@@ -87,7 +87,7 @@ end
 -- DESC : update button text and dropdown list with gear
 -- VARS : elapsed = how often do we update the button (events should be enough)
 -- **************************************************************************
-function TitanPanelGearStatButton_OnUpdate(self, elapsed)
+function TitanPanelGearStatButton_OnUpdate(self, _)
   debugMessage("Trying to update button, elapsed: ".. timeCounter, 0);
   
   timeCounter = timeCounter + 0.01
