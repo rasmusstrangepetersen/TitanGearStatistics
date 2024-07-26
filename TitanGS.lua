@@ -108,7 +108,7 @@ end
 -- **************************************************************************
 -- DESC : Open main UI on left click
 -- **************************************************************************
-function TitanPanelGearStatButton_OnClick(self, button)
+function TitanPanelGearStatButton_OnClick(_, button)
   debugMessage("Entering TitanPanelGearStatButton_OnClick, button: "..button, 0);
 
   if (button == "LeftButton") then
@@ -121,7 +121,7 @@ end
 -- VARS : id = plugin id
 -- **************************************************************************
 function TitanPanelGearStatButton_GetButtonText(id)
-  debugMessage("Entering TitanPanelGSButton_GetButtonText, ShowRegularText", 0);
+  debugMessage("Entering TitanPanelGSButton_GetButtonText, ShowRegularText - button id: "..id, 0);
   
   out = ""
 
@@ -198,8 +198,8 @@ function TitanPanelGS_GetPlayerGear()
     GEARLIST[index].id = GetInventorySlotInfo(GEARLIST[index].name);
     local slotLink = GetInventoryItemLink(UnitName("player"), GEARLIST[index].id);
     if (slotLink ~= nil) then
-      local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType = GetItemInfo(slotLink);
-      local effectiveILvl, isPreview, baseILvl = GetDetailedItemLevelInfo(slotLink)
+      local itemName, itemLink, _, itemLevel, _, _, _ = GetItemInfo(slotLink);
+      local effectiveILvl, _, _ = GetDetailedItemLevelInfo(slotLink)
       itemLevel = effectiveILvl
       local itemScore = 0;
       iName = itemName;
