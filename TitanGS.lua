@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.1.4";
+TITAN_GS_VERSION = "11.2.0";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
@@ -20,9 +20,10 @@ function TitanPanelGearStatButton_OnLoad(self)
     category = "Information",
     version = TITAN_GS_VERSION,
     menuText = TITAN_GS_ID,
-    buttonTextFunction = "TitanPanelGearStatButton_GetButtonText",
+    menuTextFunction = TitanPanelRightClickMenu_PrepareGearStatMenu,
+    buttonTextFunction = TitanPanelGearStatButton_GetButtonText,
     tooltipTitle = TITAN_GS_TOOLTIP_TITLE,
-    tooltipTextFunction = "TitanPanelGearStatButton_GetTooltipText",
+    tooltipTextFunction = TitanPanelGearStatButton_GetTooltipText,
     icon = "Interface\\Icons\\INV_Chest_Samurai",
     iconWidth = 16,
     controlVariables = {
@@ -242,11 +243,7 @@ function TitanPanelRightClickMenu_PrepareGearStatMenu()
 
   -- level 1
   TitanPanelRightClickMenu_AddTitle(TitanPlugins[TITAN_GS_ID].menuText);
+--  TitanPanelRightClickMenu_AddSpacer();
 
-  TitanPanelRightClickMenu_AddSpacer();
-  TitanPanelRightClickMenu_AddToggleIcon(TITAN_GS_ID);
-  TitanPanelRightClickMenu_AddToggleLabelText(TITAN_GS_ID);
-  TitanPanelRightClickMenu_AddToggleColoredText(TITAN_GS_ID);
-  TitanPanelRightClickMenu_AddSpacer();
-  TitanPanelRightClickMenu_AddCommand(L["TITAN_PANEL_MENU_HIDE"], TITAN_GS_ID, TITAN_PANEL_MENU_FUNC_HIDE);
+  TitanPanelRightClickMenu_AddControlVars(TITAN_GS_ID)
 end
