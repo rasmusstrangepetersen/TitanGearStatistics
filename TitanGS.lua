@@ -1,5 +1,5 @@
 -- *** Version information
-TITAN_GS_VERSION = "11.2.0";
+TITAN_GS_VERSION = "11.2.1";
 
 -- *** Plugin identity
 TITAN_GS_ID = "GearStat";
